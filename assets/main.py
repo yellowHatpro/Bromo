@@ -2,8 +2,12 @@ import discord
 from discord.ext import commands , tasks
 import aiohttp
 import random
+import os
+from dotenv import load_dotenv
 
 
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 # discord.intents.all role is to allow the bot to see all the roles in the server
 intents = discord.Intents.default()
@@ -72,4 +76,4 @@ async def game(ctx, *, game):
 
 
 
-client.run("ODk5ODc3MjIwMjgwMDQxNTQy.YW5J-A.V8Eb0wGMDhRrWmoZ13KKDiXl_IM")
+client.run(TOKEN)
