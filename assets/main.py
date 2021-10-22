@@ -4,6 +4,7 @@ import aiohttp
 import random
 import os
 from dotenv import load_dotenv
+import random
 
 
 load_dotenv()
@@ -15,13 +16,28 @@ intents.members = True
 client = commands.Bot(command_prefix='>' , intents = intents)
 
 
+
+#variables
+statuses = ['vscode','sublime text', 'python', 'discord.py', 'bromo', 'bromo.py', 'bromo.py']
+#events:
+
 @client.event
 async def on_ready():
+    await client.change_presence(status=discord.Status.idle, activity=discord.Game(''))
     print('Bot is ready')  
+    
 
 @client.event
 async def help(ctx):
     await ctx.send('help')
+
+
+
+
+
+
+
+#commands    
 
 @client.command(aliases=['user','info'])
 async def userinfo(ctx, member: discord.Member):
