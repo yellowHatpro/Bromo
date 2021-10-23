@@ -5,6 +5,8 @@ import random
 import os
 from dotenv import load_dotenv
 import random
+import random2
+import requests
 
 
 load_dotenv()
@@ -21,24 +23,51 @@ client = commands.Bot(command_prefix='>' , intents = intents)
 statuses = ['vscode','sublime text', 'python', 'discord.py', 'bromo', 'bromo.py', 'bromo.py']
 #events:
 
-@client.event
-async def on_ready():
-    await client.change_presence(status=discord.Status.idle, activity=discord.Game(''))
-    print('Bot is ready')  
+
     
 
+@tasks.loop(seconds=10000)
+async def change_status():
+    await client.change_presence(activity=discord.Game(random.choice(statuses)))
+
+    
+@client.event
+async def on_ready():
+    
+    print('Bot is ready')  
+    change_status.start() #starts the loop
 @client.event
 async def help(ctx):
     await ctx.send('help')
 
 
 
-
-
-
-
 #commands    
 
+@client.command()
+async def meme(ctx=None):
+    pymeme = discord.Embed(title="Test", description="Test", color=0xe91e63)
+    # now getting memes from api using requests
+    # https://meme-api.herokuapp.com/gimme
+    # https://meme-api.herokuapp.com/gimme/dank
+    # https://meme-api.herokuapp.com/gimme/spongebob
+    requests.get('https://meme-api.herokuapp.com/gimme/dank')
+    # now getting the json data
+    data = requests.get('https://meme-api.herokuapp.com/gimme/dank').json()
+    # now getting the image url
+    image = data['url']
+    # now getting the title
+    title = data['title']
+    # now getting the subreddit
+    subreddit = data['subreddit']
+    # now using the embed to add the image and title
+    pymeme.set_image(url=image)
+    pymeme.set_footer(text=f'Subreddit: {subreddit}')
+    pymeme.set_author(name=title)
+    # now sending the embed
+    await ctx.send(embed=pymeme)
+
+    
 @client.command(aliases=['user','info'])
 async def userinfo(ctx, member: discord.Member):
     embed = discord.Embed(title = member.name , description = member.id , color = discord.Color.blue()) 
@@ -79,7 +108,6 @@ async def _8ball(ctx, *, question):
                  'Not likely.',
                  "Don't know, didn't ask,plus you are sus. ",
                     'Not sure.',
-                
                  ]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
