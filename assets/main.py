@@ -67,6 +67,37 @@ async def meme(ctx=None):
     # now sending the embed
     await ctx.send(embed=pymeme)
 
+@client.command()
+async def weather(ctx, city):
+    # getting the weather from api
+    # https://api.openweathermap.org/data/2.5/weather?q=London&appid=e0b7e2f1f7f5f8b5d7c4b4f4c7d5b9f5
+    # https://api.openweathermap.org/data/2.5/weather?q=London&appid=e0b7e2f1f7f5f8b5d7c4b4f4c7d5b9f5
+    # https://api.openweathermap.org/data/2.5/weather?q=London&appid=e0b7e2f1f7f5f8b5d7c4b4f4c7d5b9f5
+    # https://api.openweathermap.org/data/2.5/weather?q=London&appid=e0b7e2f1f7f5f8b5d7c4b4f4c7d5b9f5
+    # https://api.openweathermap.org/data/2.5/weather?q=London&appid=e0b7e2f1f7f5f8b5d7c4b4f4
+    
+    # now getting the json data
+    data = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=cd0755a868710f3da85d3e63a838080e').json()
+    # now getting the weather
+    weather = data['weather'][0]['main']
+    # now getting the temperature
+    temp = data['main']['temp']
+    # now getting the humidity
+    humidity = data['main']['humidity']
+    # now getting the wind speed
+    wind = data['wind']['speed']
+
+    # now using the embed to add the weather, temp, humidity and wind
+    embed = discord.Embed(title="Test", description="Test", color=0xe91e63)
+    #adding image to embed
+    embed.set_image(url=f'https://openweathermap.org/img/wn/{data["weather"][0]["icon"]}@2x.png')
+    embed.add_field(name='Weather', value=weather)
+    embed.add_field(name='Temperature', value=temp)
+    embed.add_field(name='Humidity', value=humidity)
+    embed.add_field(name='Wind Speed', value=wind)
+    # now sending the embed
+    await ctx.send(embed=embed)
+    
     
 @client.command(aliases=['user','info'])
 async def userinfo(ctx, member: discord.Member):
