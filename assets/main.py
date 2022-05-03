@@ -8,7 +8,6 @@ import random
 import random2
 import requests
 
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -17,20 +16,14 @@ intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(command_prefix='>' , intents = intents)
 
-
-
 #variables
 statuses = ['vscode','sublime text', 'python', 'discord.py', 'bromo', 'bromo.py', 'bromo.py']
 #events:
-
-
-    
 
 @tasks.loop(seconds=10000)
 async def change_status():
     await client.change_presence(activity=discord.Game(random.choice(statuses)))
 
-    
 @client.event
 async def on_ready():
     
@@ -147,8 +140,5 @@ async def _8ball(ctx, *, question):
 async def game(ctx, *, game):
     await client.change_presence(activity=discord.Game(name=game))
     await ctx.send(f'Now playing {game}')
-    
-
-
 
 client.run(TOKEN)
