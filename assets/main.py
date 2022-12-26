@@ -2,8 +2,8 @@ import discord
 from discord import app_commands
 import os
 from dotenv import load_dotenv
+import leetcodeApi
 import random
-import requests
 
 
 class aclient(discord.Client):
@@ -31,6 +31,21 @@ async def help(ctx):
     await ctx.send('help')
 
 # commands
+
+
+@tree.command(name="leetcoderandom", description="Gives random leetcode question")
+async def leetcoderandom(interaction: discord.Interaction):
+    if (len(leetcodeApi.question_stats) != 0):
+        question = random.choice(leetcodeApi.question_stat)
+        print(question)
+        q = question["question__title_slug"]
+        embed = discord.Embed(
+            title=question["question__title"],
+            description=f"[https://leetcode.com/problems/{q}](https://leetcode.com/problems/{q})"
+        )
+        await interaction.response.send_message(embed=embed)
+    else:
+        return
 
 
 @tree.command(name="userinfo", description="Tells user info")
