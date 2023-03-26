@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 import leetcodeApi
 import random
+from replit import db
+from keep_alive import keep_alive
 
 
 class aclient(discord.Client):
@@ -30,12 +32,13 @@ tree = app_commands.CommandTree(client)
 async def help(ctx):
     await ctx.send('help')
 
+
 # commands
 
 
 @tree.command(name="leetcoderandom", description="Gives random leetcode question")
 async def leetcoderandom(interaction: discord.Interaction):
-    if (len(leetcodeApi.question_stats) != 0):
+    if len(leetcodeApi.question_stats) != 0:
         question = random.choice(leetcodeApi.question_stat)
         print(question)
         q = question["question__title_slug"]
@@ -64,5 +67,8 @@ async def userinfo(interaction: discord.Interaction, member: discord.Member):
         name="Bromo", icon_url="https://drive.google.com/file/d/1C1xc0VGIbyofDpCmpHlHdJ3xRbDi6iB4/view?usp=share_link")
     embed.set_image(url=member.display_avatar)
     await interaction.response.send_message(embed=embed)
+
+
+keep_alive()
 
 client.run(TOKEN)
