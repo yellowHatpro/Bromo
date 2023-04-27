@@ -1,8 +1,7 @@
-BeautifulSoup
-Flask
+Flask~=2.2.3
 gunicorn
-discord
-requests
-datetime
-load_dotenv
-os
+discord~=2.1.0
+requests~=2.27.1
+python-dotenv~=0.20.0
+bs4~=0.0.1
+beautifulsoup4~=4.12.0
