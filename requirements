@@ -1,0 +1,8 @@
+BeautifulSoup
+Flask
+gunicorn
+discord
+requests
+datetime
+load_dotenv
+os
