@@ -3,7 +3,6 @@ from discord import app_commands
 import os
 from dotenv import load_dotenv
 import random
-from app import app
 from api import leetcode_api
 
 
@@ -69,4 +68,3 @@ async def userinfo(interaction: discord.Interaction, member: discord.Member):
 
 
 client.run(TOKEN)
-app.run()
