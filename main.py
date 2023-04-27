@@ -2,10 +2,9 @@ import discord
 from discord import app_commands
 import os
 from dotenv import load_dotenv
-import leetcodeApi
 import random
-from replit import db
-from keep_alive import keep_alive
+import app
+from api import leetcode_api
 
 
 class aclient(discord.Client):
@@ -36,10 +35,10 @@ async def help(ctx):
 # commands
 
 
-@tree.command(name="leetcoderandom", description="Gives random leetcode question")
-async def leetcoderandom(interaction: discord.Interaction):
-    if len(leetcodeApi.question_stats) != 0:
-        question = random.choice(leetcodeApi.question_stat)
+@tree.command(name="leetcode_random", description="Gives random leetcode question")
+async def leetcode_random(interaction: discord.Interaction):
+    if len(leetcode_api.question_stats) != 0:
+        question = random.choice(leetcode_api.question_stat)
         print(question)
         q = question["question__title_slug"]
         embed = discord.Embed(
@@ -54,7 +53,7 @@ async def leetcoderandom(interaction: discord.Interaction):
 @tree.command(name="userinfo", description="Tells user info")
 async def userinfo(interaction: discord.Interaction, member: discord.Member):
     roles = [str(role.name) for role in member.roles]
-    if ("@everyone" in roles):
+    if "@everyone" in roles:
         roles.remove("@everyone")
     embed = discord.Embed(
         title=member.name,
@@ -69,6 +68,5 @@ async def userinfo(interaction: discord.Interaction, member: discord.Member):
     await interaction.response.send_message(embed=embed)
 
 
-keep_alive()
-
+app()
 client.run(TOKEN)
