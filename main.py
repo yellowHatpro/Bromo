@@ -1,8 +1,9 @@
 import discord
-from discord import app_commands
 import os
-from dotenv import load_dotenv
 import random
+from discord import app_commands, Color
+from dotenv import load_dotenv
+from urllib.error import HTTPError
 from api import leetcode_api
 
 
@@ -36,16 +37,41 @@ async def help(ctx):
 
 @tree.command(name="leetcode_random", description="Gives random leetcode question")
 async def leetcode_random(interaction: discord.Interaction):
-    if len(leetcode_api.question_stats) != 0:
-        question = random.choice(leetcode_api.question_stat)
-        print(question)
+    questions = leetcode_api.random_leetcode_problem()
+    if len(questions) != 0:
+        question_stat = [q["stat"] for q in questions]
+        question = random.choice(question_stat)
         q = question["question__title_slug"]
         embed = discord.Embed(
             title=question["question__title"],
-            description=f"[https://leetcode.com/problems/{q}](https://leetcode.com/problems/{q})"
+            description=f"[https://leetcode.com/problems/{q}](https://leetcode.com/problems/{q})",
+            color=Color.blue()
         )
         await interaction.response.send_message(embed=embed)
     else:
+        return
+
+
+@tree.command(name="leetcode_daily", description="Today's leetcode question")
+async def leetcode_daily(interaction: discord.Interaction):
+    try:
+        q = leetcode_api.get_daily_problem_as_dict()
+        data = q["data"]["activeDailyCodingChallengeQuestion"]
+        question = data["question"]
+        question_name = question["title"]
+        question_id = question["frontendQuestionId"]
+        question_difficulty = question["difficulty"]
+        topic_tags = question["topicTags"]
+        question_slug = question["titleSlug"]
+        link = f"https://leetcode.com/problems/{question_slug}"
+
+        embed = discord.Embed(
+            title=f"{question_id}. {question_name}",
+            description=f"Difficulty: {question_difficulty} \n ",
+            url=link
+        )
+        await interaction.response.send_message(embed=embed)
+    except HTTPError:
         return
 
 
